@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kayzer Airlines — Vanity Sniper Control Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card-bg: rgba(22, 24, 34, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.35);
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 18px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11, 12, 16, 0.85);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+      object-fit: cover;
+    }
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand span {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--success);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    main {
+      padding: 28px 36px;
+      max-width: 1600px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    /* STATS CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+    .stat-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* TROPHY BANNER */
+    .trophy-banner {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 18px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.2);
+    }
+    .trophy-info h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #c4b5fd;
+      margin-bottom: 4px;
+    }
+    .trophy-code {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+    .trophy-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* LIVE TERMINAL FEED */
+    .terminal-card {
+      background: #090a0f;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      height: 540px;
+      overflow: hidden;
+    }
+    .terminal-header {
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .terminal-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .terminal-logs {
+      flex: 1;
+      padding: 16px 20px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .log-row {
+      display: flex;
+      gap: 12px;
+      word-break: break-all;
+    }
+    .log-time { color: var(--text-muted); opacity: 0.6; }
+    .log-tag { font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+    .tag-claim { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .tag-trigger { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .tag-system { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; }
+    .tag-error { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+    /* SIDEBAR CONTROLS */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .control-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px;
+      backdrop-filter: blur(8px);
+    }
+    .control-card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+    }
+
+    .mode-option {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .mode-option:hover {
+      background: rgba(139, 92, 246, 0.05);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+    .mode-option.active {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+    .mode-option input[type="radio"] {
+      margin-top: 3px;
+      accent-color: var(--primary);
+    }
+    .mode-details h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .mode-details p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #7c3aed);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="/avatar.jpg" alt="Kayzer Airlines" onerror="this.src='https://via.placeholder.com/44'">
+      <div>
+        <h1>KAYZER AIRLINES</h1>
+        <span>DB & Kayzer — Control Center</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="status-badge" id="botStatusBadge">
+        <div class="status-dot" id="botStatusDot"></div>
+        <span id="botStatusText">BAĞLANIYOR...</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="content-left">
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Takip Edilen Vanity</div>
+          <div class="stat-value" id="trackedCount">0</div>
+          <div class="stat-sub">Aktif Sunucu Radarı</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Son Yanıt Hızı</div>
+          <div class="stat-value" id="lastSpeed">0 ms</div>
+          <div class="stat-sub">HTTP/2 + TLS Hibrit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">MFA Durumu</div>
+          <div class="stat-value" id="mfaStatus" style="font-size: 1.1rem; color: var(--success); margin-top: 6px;">ONAYLI</div>
+          <div class="stat-sub">Bilet Hazırda Bekliyor</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Sistem Kilidi</div>
+          <div class="stat-value" id="lockStatus" style="font-size: 1.1rem; color: var(--accent); margin-top: 6px;">BEKLEMEDE</div>
+          <div class="stat-sub">Alınca Otomatik Kilit</div>
+        </div>
+      </div>
+
+      <!-- TROPHY VITRINI -->
+      <div class="trophy-banner" id="trophyBanner">
+        <div class="trophy-info">
+          <h3>🏆 Son Alınan Vanity URL</h3>
+          <div class="trophy-code" id="trophyCode">Henüz Alınmadı</div>
+          <div class="trophy-meta" id="trophyMeta">Pusuda bekleniyor...</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Webhook Durumu</div>
+          <div style="color: var(--success); font-weight: 700; margin-top: 4px;" id="webhookStatus">Hazır ✅</div>
+        </div>
+      </div>
+
+      <!-- CANLI TERMINAL FEED -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-title">
+            <span style="color: var(--accent);">●</span> CANLI ETKİNLİK AKIŞI
+          </div>
+          <button style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem;" onclick="clearLogs()">Temizle</button>
+        </div>
+        <div class="terminal-logs" id="logsContainer">
+          <div class="log-row">
+            <span class="log-time">[00:00:00]</span>
+            <span class="log-tag tag-system">SYSTEM</span>
+            <span>Kontrol paneline bağlanılıyor...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR CONTROLS -->
+    <div class="sidebar">
+      <!-- ÇALIŞMA MODU -->
+      <div class="control-card">
+        <h2>🎯 Çalışma Modu</h2>
+        
+        <div class="mode-option" onclick="setMode(1)" id="mode1Card">
+          <input type="radio" name="sniperMode" id="mode1Radio" value="1">
+          <div class="mode-details">
+            <h4>Tek Hedef Modu</h4>
+            <p>Sadece belirlediğin özel URL'yi bekler, alınca durur.</p>
+            <div id="targetInputWrapper" style="display: none; margin-top: 10px;">
+              <input type="text" class="form-control" id="targetVanityInput" placeholder="Örn: s2g" onchange="updateTargetVanity(this.value)">
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-option active" onclick="setMode(2)" id="mode2Card">
+          <input type="radio" name="sniperMode" id="mode2Radio" value="2" checked>
+          <div class="mode-details">
+            <h4>Tüm Sunucular (Al-Dur)</h4>
+            <p>İlk düşen URL'yi kapar ve kilitlenip durur. (Önerilen)</p>
+          </div>
+        </div>
+
+        <div class="mode-option" onclick="setMode(3)" id="mode3Card">
+          <input type="radio" name="sniperMode" id="mode3Radio" value="3">
+          <div class="mode-details">
+            <h4>Sonsuz Agresif</h4>
+            <p>Hiç durmaz, ne düşerse sürekli almaya devam eder.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; display: flex; gap: 8px;">
+          <button class="btn btn-danger" id="lockToggleBtn" onclick="toggleLock()">Kilidi Aç / Sıfırla</button>
+        </div>
+      </div>
+
+      <!-- HIZLI AYARLAR -->
+      <div class="control-card">
+        <h2>⚙️ Konfigürasyon</h2>
+        <div class="form-group">
+          <label>Hedef Sunucu ID</label>
+          <input type="text" class="form-control" id="cfgServerId" value="1511835309409702020">
+        </div>
+        <div class="form-group">
+          <label>Discord Webhook Linki</label>
+          <input type="text" class="form-control" id="cfgWebhook" value="https://discord.com/api/webhooks/1565189503595974697/YLai9zJBl-9-2z_wqR67Kg1Y4nBnn7cS3wLA7SSiY1tuXdZyrZ5m03FDMqKMp1awfBka">
+        </div>
+        <button class="btn btn-primary" onclick="saveConfig()">Ayarları Kaydet</button>
+      </div>
+    </div>
+  </main>
+
+  <audio id="operasyonSfx" src="/operasyon.mp3" preload="auto"></audio>
+  <script>
+    const ws = new WebSocket(`ws://${location.host}/ws`);
+    const logsContainer = document.getElementById('logsContainer');
+
+    function appendLog(tag, type, message) {
+      const now = new Date().toTimeString().split(' ')[0];
+      const row = document.createElement('div');
+      row.className = 'log-row';
+      row.innerHTML = `
+        <span class="log-time">[${now}]</span>
+        <span class="log-tag tag-${type}">${tag}</span>
+        <span>${message}</span>
+      `;
+      logsContainer.appendChild(row);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+
+    function clearLogs() {
+      logsContainer.innerHTML = '';
+    }
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      if (data.type === 'log') {
+        appendLog(data.tag, data.level, data.message);
+      } else if (data.type === 'state') {
+        document.getElementById('trackedCount').textContent = data.trackedCount;
+        document.getElementById('mfaStatus').textContent = data.mfaReady ? 'ONAYLI' : 'YENİLENİYOR';
+        document.getElementById('mfaStatus').style.color = data.mfaReady ? 'var(--success)' : 'var(--warning)';
+
+        const badge = document.getElementById('botStatusBadge');
+        const dot = document.getElementById('botStatusDot');
+        const text = document.getElementById('botStatusText');
+
+        if (data.isLocked) {
+          document.getElementById('lockStatus').textContent = 'KİLİTLİ 🔒';
+          document.getElementById('lockStatus').style.color = 'var(--warning)';
+        } else {
+          document.getElementById('lockStatus').textContent = 'AKTİF';
+          document.getElementById('lockStatus').style.color = 'var(--success)';
+        }
+
+        if (data.gatewayReady) {
+          text.textContent = 'RADAR AÇIK';
+          badge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+          badge.style.color = 'var(--success)';
+          dot.style.background = 'var(--success)';
+        } else {
+          text.textContent = 'BAĞLANIYOR...';
+          badge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+          badge.style.color = 'var(--warning)';
+          dot.style.background = 'var(--warning)';
+        }
+
+        if (data.lastClaim) {
+          document.getElementById('trophyCode').textContent = data.lastClaim.code;
+          document.getElementById('trophyMeta').textContent = `Tarih: ${data.lastClaim.time} — Hız: ${data.lastClaim.speed}`;
+          document.getElementById('lastSpeed').textContent = data.lastClaim.speed;
+          
+          // Polat sesi patlasın!
+          const sfx = document.getElementById('operasyonSfx');
+          if (sfx) { sfx.currentTime = 0; sfx.play().catch(() => {}); }
+        }
+      }
+    };
+
+    function setMode(mode) {
+      document.querySelectorAll('.mode-option').forEach(el => el.classList.remove('active'));
+      document.getElementById(`mode${mode}Card`).classList.add('active');
+      document.getElementById(`mode${mode}Radio`).checked = true;
+
+      const targetWrapper = document.getElementById('targetInputWrapper');
+      if (mode === 1) {
+        targetWrapper.style.display = 'block';
+      } else {
+        targetWrapper.style.display = 'none';
+      }
+
+      ws.send(JSON.stringify({ action: 'setMode', mode: mode }));
+    }
+
+    function updateTargetVanity(val) {
+      ws.send(JSON.stringify({ action: 'setTargetVanity', code: val.trim() }));
+    }
+
+    function toggleLock() {
+      ws.send(JSON.stringify({ action: 'toggleLock' }));
+    }
+
+    function saveConfig() {
+      const serverId = document.getElementById('cfgServerId').value.trim();
+      const webhook = document.getElementById('cfgWebhook').value.trim();
+      ws.send(JSON.stringify({ action: 'saveConfig', serverId, webhook }));
+      appendLog('CONFIG', 'system', 'Ayarlar başarıyla güncellendi.');
+    }
+  </script>
+</body>
+</html>

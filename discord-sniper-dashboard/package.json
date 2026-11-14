@@ -1,0 +1,13 @@
+{
+  "name": "kayzer-sniper-dashboard",
+  "version": "2.0.0",
+  "description": "Kayzer Airlines Discord Vanity Sniper - Web Control Center",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
+  }
+}
